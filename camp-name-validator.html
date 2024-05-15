@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Campaign Name Validator</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="parser.js"></script>
+  <script>
+      function parseCampaignName(campaignName) {
+          var parts = campaignName.split('_');
+          var validGroupValues = ["acq", "aware", "consider", "engage"];
+          var validTypeValues = ["prosp", "rtg", "searchbrand", "searchnonbranded", "branding", "prboost", "traffic", "vidview", "event", "calculate", "download", "webinar", "course", "oneoff", "nurture"];
+          var validContentAdTypeValues = ["dis", "native", "image", "video", "carousel", "conversation", "dynamic", "msg", "txt", "extleadform", "leadbuy", "paidlist", "reviewsites", "vendordirectory", "podcast", "print", "sponnewsletter", "sponpost", "consynd", "c2m", "docads", "answer", "thoughtleader", "waitlist", "eventinv", "webininv", "reengage", "adopt", "nurture", "postevent", "postwebi", "bookdemo", "gatedasset", "doubleopt", "deelnewsletter", "comprofile", "search", "tshowspon", "tshowatten", "fnewsletter", "produpdates", "announce", "newsinfo", "guide", "info", "cs", "eb", "wbr", "vid", "cr", "tmplt", "tool", "image", "carousel", "conversation", "dynamic", "msg", "docads", "c2m", "offcol", "course", "report"];
+          var validCampaignCategoryValues = ["gh", "ghic", "gheor", "ghpeo", "ghshield", "lc", "gmobil", "payments", "equity", "gp", "uspay", "hr", "all"];
+          var validCompanySizeValues = ["lowsmb", "upsmb", "lowmm", "upmm", "ent", "smb", "smbmm", "mment", "upmment", "all"];
+
+          if (!validGroupValues.includes(parts[1])) {
+              throw new Error("GroupOfCampaign value must be one of: acq, aware, consider, engage");
+          }
+
+          if (!validTypeValues.includes(parts[2])) {
+              throw new Error("TypeOfCampaign value must be one of: prosp, rtg, searchbrand, searchnonbranded, branding, prboost, traffic, vidview, event, calculate, download, webinar, course, oneoff, nurture");
+          }
+          if (parts[4] !== "" && !validContentAdTypeValues.includes(parts[4])) {
+              throw new Error("ContentAdType value must be one of the specified values or null.");
+          }
+          if (parts[6] !== "" && !validCampaignCategoryValues.includes(parts[6])) {
+              throw new Error("CampaignCategory value must be one of the specified values or null.");
+          }
+          if (!validCompanySizeValues.includes(parts[7])) {
+              throw new Error("CompanySize value must be one of the specified values");
+          }
+
+        var parsedInfo = {
+            "Region": parts[0].split('-')[0],
+            "Tier": parts[0].split('-')[1],
+            "Country": parts[0].split('-').slice(2).join('-'),
+            "Group of Campaign": parts[1],
+            "Type of Campaign": parts[2],
+            "Vendor": parts[3],
+            "Content/Ad Type": parts[4],
+            "Audience": parts[5].split('-')[0],
+            "Way of Targeting": parts[5].split('-')[1],
+            "Other Details": parts[5].split('-').slice(2).join('-'),
+            "Campaign Category": parts[6],
+            "Company Size": parts[7]
+        };
+          return parsedInfo;
+      }
+      function parseCampaign() {
+          var campaignName = document.getElementById('campaignNameInput').value;
+          if (campaignName === '') {
+              document.getElementById('campaignInfo').innerHTML = "Please provide a campaign name.";
+              return;
+          }
+          try {
+              var parsedCampaignInfo = parseCampaignName(campaignName);
+              var infoStr = '<div><h2>Parsed Campaign Information:</h2>';
+              for (var key in parsedCampaignInfo) {
+                  infoStr += '<p><strong>' + key + '</strong>: ' + parsedCampaignInfo[key] + '</p>';
+              }
+              infoStr += '</div>';
+              document.getElementById('campaignInfo').innerHTML = infoStr;
+          } catch (error) {
+              document.getElementById('campaignInfo').innerHTML = '<div style="color: red;">' + error.message + '</div>';
+          }
+      }
+  </script>
+</head>
+<body>
+  <h1>Campaign Name Validator</h1>
+
+  <div>
+    <label for="campaignName">Enter Campaign Name:</label>
+    <input type="text" id="campaignNameInput">
+    <button onclick="parseCampaign()">Parse</button>
+  </div>
+
+  <div id="campaignInfo"></div>
+</body>
+</html>
