@@ -1,0 +1,31 @@
+// Define variables
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+
+// Define mixins
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+// Nest styles
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+
+  // Use variables
+  background-color: $secondary-color;
+
+  // Use mixins
+  @include border-radius(5px);
+
+  // Nest child elements
+  h1 {
+    color: $primary-color;
+  }
+}
